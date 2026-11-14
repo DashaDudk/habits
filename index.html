@@ -16,6 +16,9 @@
       --ink: #1f3d2b;
       --muted: #6d8a76;
       --lime: #bfe48f;
+      --on-accent: #fff;
+      --miss: #c3d3c0;
+      --soft: #e1efdd;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,6 +36,26 @@
 
     header h1 { font-size: 26px; font-weight: 800; }
     header p { color: var(--muted); font-weight: 600; margin-top: 2px; }
+    .head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .menu-wrap { position: relative; }
+    .burger {
+      width: 42px; height: 42px; border: none; border-radius: 14px;
+      background: var(--sage); color: var(--leaf-dark);
+      display: grid; place-items: center; cursor: pointer;
+    }
+    .burger.active { background: var(--leaf-dark); color: var(--on-accent); }
+    .menu {
+      position: absolute; right: 0; top: 48px; z-index: 20; min-width: 190px;
+      background: var(--card); border-radius: 18px; padding: 6px;
+      box-shadow: 0 8px 24px rgba(31, 61, 43, 0.18);
+    }
+    .menu[hidden] { display: none; }
+    .menu-item {
+      display: block; width: 100%; text-align: left; border: none; background: none;
+      font: inherit; font-weight: 800; color: var(--ink);
+      padding: 12px 14px; border-radius: 12px; cursor: pointer;
+    }
+    .menu-item.active { background: var(--sage); color: var(--leaf-dark); }
 
     /* Вкладки */
     .tabs {
@@ -46,9 +69,9 @@
     .tab {
       flex: 1; border: none; background: none; cursor: pointer;
       font: inherit; font-weight: 800; color: var(--leaf-dark);
-      padding: 10px; border-radius: 14px;
+      font-size: 14px; padding: 10px 4px; border-radius: 14px;
     }
-    .tab.active { background: #fff; box-shadow: 0 2px 6px rgba(47, 122, 67, 0.15); }
+    .tab.active { background: var(--card); box-shadow: 0 2px 6px rgba(47, 122, 67, 0.15); }
 
     .view { display: none; }
     .view.active { display: block; }
@@ -86,16 +109,16 @@
     }
     .check {
       width: 38px; height: 38px; border-radius: 50%;
-      border: 3px solid var(--sage); background: #fff; cursor: pointer;
+      border: 3px solid var(--sage); background: var(--card); cursor: pointer;
       flex-shrink: 0; display: grid; place-items: center;
-      font-size: 18px; color: #fff;
+      font-size: 18px; color: var(--on-accent);
       transition: background 0.2s, border-color 0.2s;
     }
     .habit.done .check { background: var(--leaf); border-color: var(--leaf); }
     .info { flex: 1; min-width: 0; }
     .name { font-weight: 800; font-size: 16px; }
     .habit.done .name { color: var(--muted); text-decoration: line-through; }
-    .meta { margin-top: 6px; display: flex; align-items: center; gap: 10px; }
+    .meta { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
     .dots { display: flex; gap: 4px; }
     .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--sage); }
     .dots span.on { background: var(--leaf); }
@@ -114,7 +137,7 @@
     }
     .filter {
       width: 100%; margin-bottom: 14px;
-      border: 2px solid var(--sage); background: #fff; color: var(--ink);
+      border: 2px solid var(--sage); background: var(--card); color: var(--ink);
       border-radius: 14px; padding: 10px 12px; font: inherit; font-weight: 600;
     }
     .weekdays, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
@@ -127,7 +150,7 @@
     .day.blank { background: none; cursor: default; }
     .day.l1 { background: var(--sage); }
     .day.l2 { background: var(--lime); }
-    .day.l3 { background: var(--leaf); color: #fff; }
+    .day.l3 { background: var(--leaf); color: var(--on-accent); }
     .day.future { opacity: 0.45; }
     .day.today { border-color: var(--leaf-dark); }
     .day.selected { box-shadow: 0 0 0 3px var(--leaf-dark); }
@@ -147,7 +170,7 @@
     .detail-row .mark {
       width: 28px; height: 28px; border-radius: 50%;
       border: 3px solid var(--sage); display: grid; place-items: center;
-      color: #fff; font-size: 14px; flex-shrink: 0;
+      color: var(--on-accent); font-size: 14px; flex-shrink: 0;
     }
     .detail-row.on .mark { background: var(--leaf); border-color: var(--leaf); }
     .detail-row span.t { font-weight: 700; }
@@ -158,20 +181,262 @@
     .add-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
       display: flex; justify-content: center;
-      background: linear-gradient(to top, var(--bg) 70%, transparent);
-      padding: 16px 18px 20px;
+      background: linear-gradient(to top, var(--bg) 75%, transparent);
+      padding: 16px 18px 18px;
     }
     .add-bar.hidden { display: none; }
-    .add-bar form { width: 100%; max-width: 480px; display: flex; gap: 10px; }
+    .add-bar form { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 8px; }
+    .add-row { display: flex; gap: 10px; }
     .add-bar input {
-      flex: 1; min-width: 0; border: 2px solid var(--sage); background: #fff;
+      flex: 1; min-width: 0; border: 2px solid var(--sage); background: var(--card);
       border-radius: 16px; padding: 14px 16px; font: inherit; font-weight: 600; color: var(--ink);
     }
     .add-bar input:focus { outline: none; border-color: var(--leaf); }
-    .add-bar button {
-      border: none; background: var(--leaf-dark); color: #fff;
+    .add-row button {
+      border: none; background: var(--leaf-dark); color: var(--on-accent);
       font: inherit; font-weight: 800; border-radius: 16px; padding: 0 20px; cursor: pointer;
     }
+    .add-row .freq-chip { display: flex; align-items: center; gap: 6px; }
+    .freq-chip svg { flex-shrink: 0; }
+    .freq-chip #freq-label { overflow: hidden; text-overflow: ellipsis; }
+    .seg { display: flex; gap: 6px; margin-top: 12px; background: var(--sage); border-radius: 14px; padding: 4px; }
+    .seg button {
+      flex: 1; border: none; background: none; font: inherit; font-weight: 800;
+      color: var(--leaf-dark); padding: 10px; border-radius: 11px; cursor: pointer;
+    }
+    .seg button.active { background: var(--card); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); }
+    .swatches { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+    .swatch {
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+      border: 3px solid transparent; box-shadow: inset 0 0 0 3px var(--card), 0 0 0 1px var(--sage);
+    }
+    .swatch.active { border-color: var(--ink); }
+    .swatch.mono { background: conic-gradient(#111 0 50%, #fff 0 100%); }
+    .custom-color { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; font-weight: 700; font-size: 14px; }
+    .custom-color input { width: 56px; height: 40px; border: none; background: none; padding: 0; cursor: pointer; }
+    .more-wrap { position: relative; flex-shrink: 0; }
+    .more {
+      width: 34px; height: 34px; border: none; background: none; color: var(--muted);
+      border-radius: 10px; cursor: pointer; display: grid; place-items: center;
+    }
+    .more:disabled { opacity: 0.4; cursor: default; }
+    .pop {
+      position: absolute; right: 0; top: 36px; z-index: 10; min-width: 180px;
+      background: var(--card); border: 1px solid var(--sage); border-radius: 14px; padding: 4px;
+      box-shadow: 0 8px 24px rgba(31, 61, 43, 0.18);
+    }
+    .pop[hidden] { display: none; }
+    .pop-item {
+      display: block; width: 100%; text-align: left; border: none; background: none;
+      font: inherit; font-weight: 700; font-size: 14px; color: var(--ink);
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    }
+    .pop-item:hover { background: var(--bg); }
+    .pop-item.danger { color: #c0504d; }
+    .note-text { margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--muted); word-break: break-word; }
+    .note-text[hidden] { display: none; }
+    .detail-top { display: flex; align-items: center; gap: 4px; }
+    .detail-top .detail-row { flex: 1; min-width: 0; }
+    .detail-item-note { margin: 0 0 6px 40px; }
+    .cheer { display: flex; align-items: center; gap: 10px; }
+    .cheer svg { flex-shrink: 0; }
+    .link:disabled { opacity: 0.5; cursor: default; }
+    .summary .link { margin-top: 10px; background: var(--card); }
+    .inactive-toggle { margin-top: 14px; }
+    .habit.inactive { margin-top: 10px; opacity: 0.85; }
+    .modal { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.4); display: flex; align-items: flex-end; justify-content: center; }
+    .modal[hidden] { display: none; }
+    .editor.modal-card { width: 100%; max-width: 480px; margin: 0; border-radius: 24px 24px 0 0; max-height: 90vh; overflow: auto; }
+    .e-label { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .e-extra { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .day.frozen { background-image: repeating-linear-gradient(45deg, transparent 0 4px, rgba(128, 128, 128, 0.28) 4px 8px); }
+    .freeze-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .freeze-row .hint { margin: 0; }
+    .freq-panel {
+      background: var(--card); border-radius: 16px; padding: 10px;
+      box-shadow: 0 4px 16px rgba(31, 61, 43, 0.15);
+    }
+    .freq-panel[hidden] { display: none; }
+    .add-row .freq-chip {
+      background: var(--sage); color: var(--leaf-dark); border-radius: 16px; padding: 0 12px;
+      font-size: 13px; max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .freq-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .freq-row [hidden] { display: none !important; }
+    .freq-row select {
+      border: 2px solid var(--sage); background: var(--card); color: var(--ink);
+      border-radius: 12px; padding: 8px 10px; font: inherit; font-weight: 700; font-size: 14px;
+    }
+    .day-pick { display: flex; gap: 4px; }
+    .day-pick button {
+      width: 34px; height: 34px; border-radius: 10px; font: inherit; font-size: 12px; font-weight: 800;
+      background: var(--card); color: var(--leaf-dark); border: 2px solid var(--sage); cursor: pointer;
+    }
+    .day-pick button.on { background: var(--leaf-dark); color: var(--on-accent); border-color: var(--leaf-dark); }
+
+    /* Коментарі до звичок */
+    .note-input {
+      width: 100%; margin-top: 10px;
+      border: 2px solid var(--sage); background: var(--bg); color: var(--ink);
+      border-radius: 12px; padding: 8px 10px; font: inherit; font-size: 14px; font-weight: 600;
+    }
+    .detail .note-input { margin: 0 0 8px; }
+    .note-input:focus { outline: none; border-color: var(--leaf); background: var(--card); }
+    .note-input:disabled { opacity: 0.5; }
+
+    /* Цілі */
+    .goal { background: var(--card); border-radius: 24px; padding: 16px; margin-bottom: 14px; }
+    .goal-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .goal-top h3 { font-size: 17px; font-weight: 800; }
+    .progress { height: 12px; background: var(--sage); border-radius: 8px; overflow: hidden; margin: 12px 0 6px; }
+    .progress div { height: 100%; background: var(--leaf); border-radius: 8px; transition: width 0.4s ease; }
+    .next { margin: 12px 0 6px; background: var(--bg); border-radius: 14px; padding: 10px 12px; font-weight: 700; font-size: 14px; }
+    .step {
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      border: none; background: none; font: inherit; text-align: left;
+      color: var(--ink); cursor: pointer; padding: 7px 0;
+    }
+    .step .box {
+      width: 24px; height: 24px; border-radius: 8px; border: 3px solid var(--sage);
+      display: grid; place-items: center; color: var(--on-accent); font-size: 13px; flex-shrink: 0;
+    }
+    .step.on .box { background: var(--leaf); border-color: var(--leaf); }
+    .step .t { font-weight: 700; }
+    .step.on .t { color: var(--muted); text-decoration: line-through; }
+    .step-form { display: flex; gap: 8px; margin-top: 8px; }
+    .step-form input {
+      flex: 1; min-width: 0; border: 2px solid var(--sage); background: var(--card); color: var(--ink);
+      border-radius: 12px; padding: 8px 10px; font: inherit; font-size: 14px; font-weight: 600;
+    }
+    .step-form input:focus { outline: none; border-color: var(--leaf); }
+    .step-form button {
+      border: none; background: var(--sage); color: var(--leaf-dark);
+      font: inherit; font-weight: 800; border-radius: 12px; padding: 0 14px; cursor: pointer;
+    }
+
+    /* Нова ціль і редактор */
+    .new-goal-btn {
+      width: 100%; margin: 18px 0; border: 2px dashed var(--leaf); background: none;
+      color: var(--leaf-dark); font: inherit; font-weight: 800;
+      border-radius: 18px; padding: 14px; cursor: pointer;
+    }
+    .new-goal-btn[hidden], .editor[hidden] { display: none; }
+    .editor { background: var(--card); border-radius: 24px; padding: 16px; margin: 18px 0; }
+    .editor h3 { font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+    .editor label.field { display: block; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .editor input[type=text], .editor input[type=date] {
+      display: block; width: 100%; min-width: 0; margin-top: 6px;
+      border: 2px solid var(--sage); background: var(--card); color: var(--ink);
+      border-radius: 12px; padding: 10px 12px; font: inherit; font-weight: 600;
+    }
+    .editor input:focus { outline: none; border-color: var(--leaf); }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+    .presets button {
+      border: none; background: var(--sage); color: var(--leaf-dark);
+      font: inherit; font-weight: 800; border-radius: 12px; padding: 8px 12px; cursor: pointer;
+    }
+    .editor fieldset { border: none; margin-bottom: 14px; }
+    .editor legend { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .check-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-weight: 600; }
+    .check-row input { width: 20px; height: 20px; accent-color: var(--leaf-dark); }
+    .editor-actions { display: flex; gap: 10px; }
+    .editor-actions button {
+      flex: 1; border: none; border-radius: 14px; padding: 12px;
+      font: inherit; font-weight: 800; cursor: pointer;
+    }
+    .editor-actions .primary { background: var(--leaf-dark); color: var(--on-accent); }
+    .editor-actions .ghost { background: var(--sage); color: var(--leaf-dark); }
+
+    /* Картка довгострокової цілі */
+    .goal-actions { display: flex; align-items: center; gap: 4px; }
+    .link {
+      border: none; background: var(--sage); color: var(--leaf-dark);
+      font: inherit; font-size: 13px; font-weight: 800;
+      border-radius: 10px; padding: 6px 10px; cursor: pointer;
+    }
+    .goal-dates { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 4px; }
+    .label-row {
+      display: flex; justify-content: space-between; gap: 10px;
+      margin-top: 14px; font-size: 14px; font-weight: 700;
+    }
+    .label-row span:last-child { color: var(--muted); font-weight: 600; text-align: right; }
+    .label-row + .progress { margin: 6px 0 0; }
+    .progress.time div { background: var(--lime); }
+    .strip { display: flex; gap: 4px; margin-top: 14px; }
+    .strip span { flex: 1; height: 14px; border-radius: 5px; background: var(--bg); }
+    .strip span.miss { background: var(--sage); }
+    .strip span.half { background: var(--lime); }
+    .strip span.on { background: var(--leaf); }
+    .strip-note { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chips span {
+      background: var(--bg); border-radius: 10px; padding: 4px 10px;
+      font-size: 13px; font-weight: 700; color: var(--leaf-dark);
+    }
+    .cp-title { margin-top: 14px; font-size: 14px; font-weight: 800; }
+
+    /* Святкове повідомлення і сторінка сходів */
+    .stairs-box { margin-top: 14px; }
+    #stairs-select, #stats-select { margin-top: 18px; margin-bottom: 0; }
+    .sp-head h2 { font-size: 20px; font-weight: 800; margin-top: 18px; }
+    .sp-head p { color: var(--muted); font-weight: 600; margin-top: 2px; font-size: 14px; }
+    .sp-card { background: var(--card); border-radius: 24px; padding: 18px 16px; margin-top: 14px; }
+    .sp-title { font-weight: 800; font-size: 16px; }
+    .sp-sub { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+    .sp-stairs { position: relative; height: 220px; margin-top: 38px; }
+    .sp-svg { width: 100%; height: 100%; display: block; }
+    .sp-pin {
+      position: absolute; width: 16px; height: 16px; margin: 0 0 5px -8px;
+      border-radius: 50%; background: var(--leaf-dark); border: 3px solid var(--card);
+      box-shadow: 0 2px 6px rgba(47, 122, 67, 0.45);
+    }
+    .sp-flag { position: absolute; right: 0; top: -28px; line-height: 0; color: var(--leaf-dark); }
+    .sp-axis { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+    .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+    .sp-legend i, .sp-stats i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 8px; vertical-align: -1px; }
+    .l-done { background: var(--leaf); }
+    .l-half { background: var(--lime); }
+    .l-miss { background: var(--miss); }
+    .l-future { background: var(--soft); }
+    .st-done { fill: var(--leaf); }
+    .st-half { fill: var(--lime); }
+    .st-miss { fill: var(--miss); }
+    .st-future, .st-rest { fill: var(--soft); }
+    .sp-ring-wrap { position: relative; width: 210px; height: 210px; margin: 14px auto 8px; }
+    .sp-ring { width: 100%; height: 100%; display: block; }
+    .sp-ring path { fill: none; stroke-width: 16; stroke-linecap: butt; }
+    .rg-done { stroke: var(--leaf); }
+    .rg-half { stroke: var(--lime); }
+    .rg-miss { stroke: var(--miss); }
+    .rg-future, .rg-rest { stroke: var(--soft); }
+    .sp-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .sp-ring-center b { font-size: 40px; font-weight: 800; line-height: 1; }
+    .sp-ring-center span { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 4px; }
+    .sp-stats { margin-top: 10px; display: grid; gap: 8px; }
+    .sp-stats div { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 14px; }
+    .sp-motto { margin-top: 14px; padding: 12px 14px; background: var(--sage); border-radius: 14px; font-weight: 700; font-size: 14px; line-height: 1.4; }
+    .cheer {
+      margin-top: 10px; padding: 12px 14px; border-radius: 14px;
+      background: linear-gradient(160deg, var(--sage), var(--lime));
+      font-weight: 800; font-size: 15px; line-height: 1.35;
+    }
+
+    /* Статистика */
+    .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .tile { background: var(--card); border-radius: 20px; padding: 14px; }
+    .tile b { display: block; font-size: 26px; font-weight: 800; }
+    .tile span { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .bars { display: flex; gap: 6px; height: 150px; margin-top: 14px; }
+    .bar-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+    .bar-track { flex: 1; width: 100%; background: var(--bg); border-radius: 8px; display: flex; align-items: flex-end; overflow: hidden; }
+    .bar-track div { width: 100%; background: var(--leaf); border-radius: 8px; }
+    .bar-col.top .bar-track div { background: var(--leaf-dark); }
+    .bar-val { font-size: 11px; font-weight: 700; color: var(--muted); height: 14px; }
+    .bar-lab { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 4px; white-space: nowrap; }
+    .streak-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; font-weight: 700; font-size: 14px; }
+    .streak-row span:last-child { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
     button:focus-visible, .check:focus-visible, .day:focus-visible, .filter:focus-visible {
       outline: 3px solid var(--leaf-dark); outline-offset: 2px;
     }
@@ -180,13 +445,27 @@
 <body>
   <main class="app">
     <header>
-      <h1>Мої звички</h1>
-      <p id="date"></p>
+      <div class="head-row">
+        <div>
+          <h1>Мої звички</h1>
+          <p id="date"></p>
+        </div>
+        <div class="menu-wrap">
+          <button class="burger" id="burger" aria-label="Меню"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+          <div class="menu" id="menu" hidden>
+            <button class="menu-item" data-tab="calendar">Календар</button>
+            <button class="menu-item" data-tab="stats">Статистика</button>
+            <button class="menu-item" data-tab="theme">Тема</button>
+            <button class="menu-item" data-tab="backup">Резервна копія</button>
+          </div>
+        </div>
+      </div>
     </header>
 
     <nav class="tabs">
       <button class="tab active" data-tab="today">Сьогодні</button>
-      <button class="tab" data-tab="calendar">Календар</button>
+      <button class="tab" data-tab="goals">Цілі</button>
+      <button class="tab" data-tab="stairs">Сходи</button>
     </nav>
 
     <!-- Вкладка "Сьогодні" -->
@@ -202,9 +481,11 @@
         <div>
           <h2>Сьогодні</h2>
           <p id="summary-text"></p>
+          <button type="button" class="link" id="freeze-btn"></button>
         </div>
       </div>
       <div class="list" id="list"></div>
+      <div id="inactive-box"></div>
     </section>
 
     <!-- Вкладка "Календар" -->
@@ -228,21 +509,203 @@
           <i style="background: var(--leaf)"></i>
           <span>Більше</span>
         </div>
+        <p class="hint">Штрихування - заморожений день</p>
         <p class="month-stat" id="month-stat"></p>
       </div>
 
       <div class="detail" id="detail"></div>
     </section>
+
+    <!-- Вкладка "Цілі" -->
+    <section class="view" id="view-goals">
+      <button class="new-goal-btn" id="new-goal">+ Нова ціль</button>
+
+      <form class="editor" id="editor" hidden>
+        <h3 id="editor-title">Нова ціль</h3>
+        <label class="field">Назва
+          <input id="g-title" type="text" maxlength="60" placeholder="Наприклад: схуднути" autocomplete="off">
+        </label>
+        <div class="row2">
+          <label class="field">Початок <input id="g-start" type="date"></label>
+          <label class="field">Кінець <input id="g-end" type="date"></label>
+        </div>
+        <div class="presets">
+          <button type="button" data-months="1">1 міс</button>
+          <button type="button" data-months="3">3 міс</button>
+          <button type="button" data-months="6">6 міс</button>
+          <button type="button" data-months="12">1 рік</button>
+        </div>
+        <fieldset>
+          <legend>Звички, які ведуть до цілі</legend>
+          <div id="g-habit-list"></div>
+        </fieldset>
+        <div class="editor-actions">
+          <button type="submit" class="primary">Зберегти</button>
+          <button type="button" class="ghost" id="g-cancel">Скасувати</button>
+        </div>
+      </form>
+
+      <div id="goals"></div>
+    </section>
+
+    <!-- Вкладка "Сходи" -->
+    <section class="view" id="view-stairs">
+      <select class="filter" id="stairs-select" aria-label="Яку ціль показати"></select>
+      <div id="stairs-page"></div>
+    </section>
+
+    <!-- Вкладка "Статистика" -->
+    <section class="view" id="view-stats">
+      <select class="filter" id="stats-select" aria-label="Яку звичку показати"></select>
+      <div id="stats-page"></div>
+    </section>
+
+    <!-- Вкладка "Тема" -->
+    <section class="view" id="view-theme">
+      <div id="theme-page"></div>
+    </section>
+
+    <!-- Вкладка "Резервна копія" -->
+    <section class="view" id="view-backup">
+      <div class="sp-card">
+        <div class="sp-title">Резервна копія</div>
+        <div class="sp-sub">Звички, цілі, коментарі, заморожені дні й тема в одному файлі. Збережи його, щоб не втратити дані, або відкрий на іншому пристрої.</div>
+        <button type="button" class="new-goal-btn" id="export-btn">Зберегти у файл</button>
+        <button type="button" class="new-goal-btn" id="import-btn" style="margin-top:0">Завантажити з файлу</button>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+        <p class="hint" id="backup-info"></p>
+      </div>
+    </section>
   </main>
 
   <div class="add-bar" id="add-bar">
     <form id="form">
-      <input id="input" type="text" placeholder="Нова звичка" maxlength="40" autocomplete="off">
-      <button type="submit">Додати</button>
+      <div class="freq-row freq-panel" id="freq-panel" hidden>
+        <select id="freq-type" aria-label="Періодичність">
+          <option value="daily">Щодня</option>
+          <option value="days">Певні дні</option>
+          <option value="weekly">Разів на тиждень</option>
+        </select>
+        <div class="day-pick" id="freq-days" hidden>
+          <button type="button" data-d="1">Пн</button><button type="button" data-d="2">Вт</button>
+          <button type="button" data-d="3">Ср</button><button type="button" data-d="4">Чт</button>
+          <button type="button" data-d="5">Пт</button><button type="button" data-d="6">Сб</button>
+          <button type="button" data-d="0">Нд</button>
+        </div>
+        <select id="freq-n" hidden aria-label="Скільки разів на тиждень">
+          <option>1</option><option>2</option><option selected>3</option>
+          <option>4</option><option>5</option><option>6</option>
+        </select>
+      </div>
+      <div class="add-row">
+        <input id="input" type="text" placeholder="Нова звичка" maxlength="40" autocomplete="off">
+        <button type="button" class="freq-chip" id="freq-toggle" aria-label="Періодичність"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg><span id="freq-label">Щодня</span></button>
+        <button type="submit">Додати</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="edit-modal" hidden>
+    <form class="editor modal-card" id="edit-form">
+      <h3>Редагувати звичку</h3>
+      <label class="field">Назва
+        <input id="e-name" type="text" maxlength="40" autocomplete="off">
+      </label>
+      <div class="e-label">Періодичність</div>
+      <div id="e-freq"></div>
+      <p class="hint" style="margin-bottom:14px">Зміна періодичності перерахує й минулі дні. Відмітки збережуться.</p>
+      <div class="editor-actions">
+        <button type="submit" class="primary">Зберегти</button>
+        <button type="button" class="ghost" id="e-cancel">Скасувати</button>
+      </div>
+      <div class="e-extra">
+        <button type="button" class="link" id="e-pause">Поставити на паузу</button>
+        <button type="button" class="link" id="e-archive">В архів</button>
+      </div>
     </form>
   </div>
 
   <script>
+    // ---------- Тема ----------
+    const THEME_KEY = "theme-v1";
+    const DEFAULT_THEME = { mode: "light", accent: "#5aab68" };
+    const SWATCHES = [["#5aab68", "Зелений"], ["#4a8fd8", "Блакитний"], ["#e0709a", "Рожевий"], ["#e8914a", "Помаранчевий"], ["#8f6fd8", "Фіолетовий"], ["mono", "Чорно-білий"]];
+    let theme = { ...DEFAULT_THEME };
+    try {
+      const t = JSON.parse(localStorage.getItem(THEME_KEY) || "null");
+      if (t && (t.mode === "light" || t.mode === "dark") && (t.accent === "mono" || /^#[0-9a-f]{6}$/i.test(t.accent))) theme = t;
+    } catch (e) {}
+    const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const rgb2hex = (a) => "#" + a.map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")).join("");
+    const mix = (a, b, t) => { const x = hex2rgb(a), y = hex2rgb(b); return rgb2hex(x.map((v, i) => v * (1 - t) + y[i] * t)); };
+    const lum = (h) => { const [r, g, b] = hex2rgb(h); return (0.299 * r + 0.587 * g + 0.114 * b) / 255; };
+
+    function applyTheme() {
+      const root = document.documentElement;
+      const names = ["bg", "card", "sage", "leaf", "leaf-dark", "ink", "muted", "lime", "on-accent", "miss", "soft"];
+      const dark = theme.mode === "dark";
+      if (!dark && theme.accent === "#5aab68") {
+        names.forEach((n) => root.style.removeProperty("--" + n));
+        root.style.colorScheme = "light";
+        return;
+      }
+      const acc = theme.accent === "mono" ? (dark ? "#f2f2f2" : "#1a1a1a") : theme.accent;
+      let v;
+      if (!dark) {
+        const sage = mix("#ffffff", acc, 0.25), ink = mix("#000000", acc, 0.22), bg = mix("#ffffff", acc, 0.1);
+        v = {
+          bg, card: "#ffffff", sage, lime: mix("#ffffff", acc, 0.5), leaf: acc,
+          "leaf-dark": mix(acc, "#000000", 0.35), ink, muted: mix(ink, bg, 0.5), "on-accent": "#ffffff",
+          miss: mix(sage, "#808080", 0.25), soft: mix("#ffffff", acc, 0.16)
+        };
+      } else {
+        const base = "#121513", ld = mix(acc, "#ffffff", 0.25), ink = mix("#ffffff", acc, 0.1), bg = mix(base, acc, 0.05);
+        v = {
+          bg, card: mix(base, acc, 0.12), sage: mix(base, acc, 0.24), lime: mix(base, acc, 0.5), leaf: acc,
+          "leaf-dark": ld, ink, muted: mix(ink, bg, 0.45), "on-accent": lum(ld) > 0.55 ? "#111111" : "#ffffff",
+          miss: mix(base, acc, 0.3), soft: mix(base, acc, 0.17)
+        };
+      }
+      Object.entries(v).forEach(([k, val]) => root.style.setProperty("--" + k, val));
+      root.style.colorScheme = dark ? "dark" : "light";
+    }
+    const saveTheme = () => localStorage.setItem(THEME_KEY, JSON.stringify(theme));
+    applyTheme();
+
+    function renderTheme() {
+      const page = document.getElementById("theme-page");
+      page.innerHTML = `
+        <div class="sp-card"><div class="sp-title">Режим</div>
+          <div class="seg"><button data-mode="light">Світла</button><button data-mode="dark">Темна</button></div></div>
+        <div class="sp-card"><div class="sp-title">Колір</div>
+          <div class="sp-sub">Обери акцент або свій колір. «Чорно-білий» - мінімалістична схема.</div>
+          <div class="swatches"></div>
+          <label class="custom-color"><span>Свій колір</span><input type="color" id="custom-color"></label></div>
+        <button class="new-goal-btn" id="theme-reset">Скинути до стандартної</button>`;
+
+      page.querySelectorAll(".seg button").forEach((b) => {
+        b.classList.toggle("active", b.dataset.mode === theme.mode);
+        b.addEventListener("click", () => { theme.mode = b.dataset.mode; saveTheme(); applyTheme(); renderTheme(); });
+      });
+      const box = page.querySelector(".swatches");
+      SWATCHES.forEach(([c, name]) => {
+        const b = document.createElement("button");
+        b.className = "swatch" + (c === "mono" ? " mono" : "") + (theme.accent === c ? " active" : "");
+        b.title = name;
+        b.setAttribute("aria-label", name);
+        if (c !== "mono") b.style.background = c;
+        b.addEventListener("click", () => { theme.accent = c; saveTheme(); applyTheme(); renderTheme(); });
+        box.appendChild(b);
+      });
+      const inp = page.querySelector("#custom-color");
+      inp.value = /^#[0-9a-f]{6}$/i.test(theme.accent) ? theme.accent : "#5aab68";
+      inp.addEventListener("input", () => { theme.accent = inp.value; saveTheme(); applyTheme(); });
+      inp.addEventListener("change", renderTheme);
+      page.querySelector("#theme-reset").addEventListener("click", () => {
+        theme = { ...DEFAULT_THEME }; saveTheme(); applyTheme(); renderTheme();
+      });
+    }
+
     const STORAGE_KEY = "habits-v1";
 
     // Дата у форматі РРРР-ММ-ДД (за місцевим часом)
@@ -262,6 +725,30 @@
     let habits = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
 
+    let goals = JSON.parse(localStorage.getItem("goals-v1") || "[]");
+    const saveGoals = () => localStorage.setItem("goals-v1", JSON.stringify(goals));
+    let freezes = {};
+    try { freezes = JSON.parse(localStorage.getItem("freeze-v1") || "{}") || {}; } catch (e) {}
+    const saveFreezes = () => localStorage.setItem("freeze-v1", JSON.stringify(freezes));
+    const MAX_FREEZE = 2;
+    let refocusGoal = null;
+    let editingId = null;
+
+    // Робота з датами
+    const parseKey = (k) => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+    const dayDiff = (a, b) => Math.round((parseKey(b) - parseKey(a)) / 86400000);
+    const addDays = (k, n) => { const d = parseKey(k); d.setDate(d.getDate() + n); return toKey(d); };
+    const addMonths = (k, n) => { const d = parseKey(k); return toKey(new Date(d.getFullYear(), d.getMonth() + n, d.getDate())); };
+    const fmtDate = (k) => parseKey(k).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
+
+    // Старі цілі без терміну отримують початок сьогодні і термін 3 місяці
+    goals.forEach((g) => {
+      g.start = g.start || todayKey();
+      g.end = g.end || addMonths(g.start, 3);
+      g.habitIds = g.habitIds || [];
+      g.steps = g.steps || [];
+    });
+
     // Стан календаря
     const now = new Date();
     let viewYear = now.getFullYear();
@@ -269,25 +756,179 @@
     let selectedDate = todayKey();
     let filter = "all";
 
+    // ---------- Періодичність ----------
+    const DAY_SHORT = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    const DAY_FULL = ["неділя", "понеділок", "вівторок", "середа", "четвер", "пʼятниця", "субота"];
+    // Звичка без freq вважається щоденною: {type:"daily"} | {type:"days", days:[1,3,5]} | {type:"weekly", n:3}
+    const freqOf = (h) => h.freq || { type: "daily" };
+    const weekStart = (k) => addDays(k, -((parseKey(k).getDay() + 6) % 7));
+    const weekCount = (h, k) => {
+      const s = weekStart(k);
+      let c = 0;
+      for (let i = 0; i < 7; i++) if (h.done[addDays(s, i)]) c++;
+      return c;
+    };
+
+    // Чи міг цей день бути пропуском для звички (дні відпочинку - ні)
+    // Чи діє звичка в цей день (до створення, під час паузи і після архівації - ні)
+    function activeOn(h, key) {
+      if (key < toKey(new Date(h.id))) return false;
+      if (h.archivedAt && key >= h.archivedAt) return false;
+      return !(h.pauses || []).some((p) => key >= p.from && (!p.to || key <= p.to));
+    }
+    const isOff = (h, key) => !!freezes[key] || !activeOn(h, key);
+    const weekOff = (h, s) => {
+      for (let i = 0; i < 7; i++) { const k = addDays(s, i); if (h.done[k] || !isOff(h, k)) return false; }
+      return true;
+    };
+    const isPausedNow = (h) => !!h.archivedAt || !activeOn(h, todayKey());
+    const freezesLeft = (key) => MAX_FREEZE - Object.keys(freezes).filter((k) => k.slice(0, 7) === key.slice(0, 7)).length;
+    function toggleFreeze(key) {
+      if (freezes[key]) delete freezes[key];
+      else {
+        if (freezesLeft(key) <= 0) { alert("У цьому місяці заморозки закінчились."); return; }
+        freezes[key] = true;
+      }
+      saveFreezes(); renderToday(); renderCalendar();
+    }
+
+    function isDue(h, key) {
+      const f = freqOf(h);
+      if (h.done[key]) return true;
+      if (isOff(h, key)) return false;
+      if (f.type === "daily") return true;
+      if (f.type === "days") return f.days.includes(parseKey(key).getDay());
+      return addDays(weekStart(key), 6) < todayKey() && weekCount(h, key) < f.n;
+    }
+
+    // Скільки очікувалось і скільки зроблено за період
+    function habitPeriod(h, a, b) {
+      const created = toKey(new Date(h.id));
+      if (created > a) a = created;
+      if (b > todayKey()) b = todayKey();
+      if (a > b) return { exp: 0, act: 0 };
+      const f = freqOf(h);
+      let exp = 0, act = 0, len = 0;
+      for (let k = a; k <= b; k = addDays(k, 1)) {
+        const d = !!h.done[k];
+        if (!d && isOff(h, k)) continue;
+        len++;
+        if (f.type === "weekly") { if (d) act++; continue; }
+        const sch = f.type === "daily" || f.days.includes(parseKey(k).getDay());
+        if (sch || d) { exp++; if (d) act++; }
+      }
+      if (f.type === "weekly") { exp = (len * f.n) / 7; act = Math.min(act, exp); }
+      return { exp, act };
+    }
+
+    function freqLabel(h) {
+      const f = freqOf(h), t = todayKey();
+      if (f.type === "days") {
+        const list = f.days.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map((d) => DAY_SHORT[d]).join(", ");
+        return list + (!isDue(h, t) ? " · сьогодні відпочинок" : "");
+      }
+      if (f.type === "weekly") return `${weekCount(h, t)} з ${f.n} цього тижня`;
+      return "Щодня";
+    }
+
     // ---------- Вкладка "Сьогодні" ----------
-    function getStreak(habit) {
-      let count = 0;
-      let i = habit.done[daysAgo(0)] ? 0 : 1;
-      while (habit.done[daysAgo(i)]) { count++; i++; }
-      return count;
+    function getStreak(h) {
+      const f = freqOf(h);
+      if (f.type === "weekly") {
+        let s = weekStart(daysAgo(0));
+        let c = weekCount(h, s) >= f.n ? 1 : 0;
+        s = addDays(s, -7);
+        for (let i = 0; i < 600; i++) {
+          if (weekCount(h, s) >= f.n) c++;
+          else if (!weekOff(h, s)) break;
+          s = addDays(s, -7);
+        }
+        return c;
+      }
+      const created = toKey(new Date(h.id));
+      let c = 0;
+      for (let i = 0; i < 4000; i++) {
+        const k = daysAgo(i);
+        if (k < created) break;
+        if (h.done[k]) { c++; continue; }
+        if (i === 0 || !isDue(h, k)) continue;
+        break;
+      }
+      return c;
+    }
+
+    function bestStreak(h) {
+      const keys = Object.keys(h.done).filter((k) => h.done[k]).sort();
+      if (!keys.length) return 0;
+      const f = freqOf(h), today = todayKey();
+      let best = 0, cur = 0;
+      if (f.type === "weekly") {
+        for (let s = weekStart(keys[0]); s <= today; s = addDays(s, 7)) {
+          if (weekCount(h, s) >= f.n) { cur++; best = Math.max(best, cur); }
+          else if (addDays(s, 6) < today && !weekOff(h, s)) cur = 0;
+        }
+        return best;
+      }
+      for (let k = keys[0]; k <= today; k = addDays(k, 1)) {
+        if (h.done[k]) { cur++; best = Math.max(best, cur); }
+        else if (k < today && isDue(h, k)) cur = 0;
+      }
+      return best;
+    }
+
+    let showInactive = false;
+
+    function restoreHabit(h) {
+      const yesterday = addDays(todayKey(), -1);
+      if (h.archivedAt) {
+        if (h.archivedAt <= yesterday) (h.pauses = h.pauses || []).push({ from: h.archivedAt, to: yesterday });
+        delete h.archivedAt;
+      }
+      (h.pauses || []).forEach((p) => { if (!p.to) p.to = yesterday; });
+      h.pauses = (h.pauses || []).filter((p) => p.to >= p.from);
+      save();
+    }
+
+    function renderInactive(inactive) {
+      const box = document.getElementById("inactive-box");
+      box.innerHTML = "";
+      if (!inactive.length) return;
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "link inactive-toggle";
+      toggle.textContent = `${showInactive ? "Сховати" : "Показати"}: на паузі та в архіві (${inactive.length})`;
+      toggle.addEventListener("click", () => { showInactive = !showInactive; renderToday(); });
+      box.appendChild(toggle);
+      if (!showInactive) return;
+      inactive.forEach((h) => {
+        const row = document.createElement("div");
+        row.className = "habit inactive";
+        row.innerHTML = '<div class="info"><div class="name"></div><div class="meta"><span class="streak"></span></div></div><button type="button" class="link">Відновити</button>';
+        row.querySelector(".name").textContent = h.name;
+        row.querySelector(".streak").textContent = h.archivedAt ? "В архіві з " + fmtDate(h.archivedAt) : "На паузі";
+        row.querySelector("button").addEventListener("click", () => { restoreHabit(h); renderToday(); });
+        box.appendChild(row);
+      });
     }
 
     function renderToday() {
       const list = document.getElementById("list");
+      const t = todayKey();
       list.innerHTML = "";
+      const active = habits.filter((h) => !isPausedNow(h));
+      const inactive = habits.filter(isPausedNow);
+      const frozen = !!freezes[t];
 
       if (habits.length === 0) {
         list.innerHTML = '<p class="empty">Поки що порожньо. Додай першу звичку внизу.</p>';
+      } else if (active.length === 0) {
+        list.innerHTML = '<p class="empty">Усі звички на паузі або в архіві.</p>';
       }
 
-      habits.forEach((habit) => {
-        const doneToday = !!habit.done[daysAgo(0)];
+      active.forEach((habit) => {
+        const doneToday = !!habit.done[t];
         const streak = getStreak(habit);
+        const weekly = freqOf(habit).type === "weekly";
 
         let dots = "";
         for (let i = 6; i >= 0; i--) {
@@ -302,22 +943,57 @@
             <div class="name"></div>
             <div class="meta">
               <div class="dots" title="Останні 7 днів">${dots}</div>
-              <span class="streak">${streak > 0 ? "Серія: " + streak : "Без серії"}</span>
+              <span class="streak">${streak > 0 ? "Серія: " + streak + (weekly ? " тиж." : "") : "Без серії"}</span>
+              <span class="streak">· ${freqLabel(habit)}</span>
             </div>
           </div>
-          <button class="del" aria-label="Видалити звичку" data-del="${habit.id}">×</button>
         `;
         el.querySelector(".name").textContent = habit.name;
+        const nc = noteControls(habit, t, {
+          items: [
+            { label: "Редагувати", fn: () => openHabitEditor(habit) },
+            {
+              label: "Видалити звичку", danger: true,
+              fn: () => {
+                if (!confirm("Видалити звичку «" + habit.name + "» разом з історією?")) return;
+                habits = habits.filter((h) => h.id !== habit.id);
+                save(); renderToday();
+              }
+            }
+          ]
+        });
+        el.querySelector(".info").appendChild(nc.area);
+        el.appendChild(nc.more);
         list.appendChild(el);
       });
 
-      const total = habits.length;
-      const done = habits.filter((h) => h.done[daysAgo(0)]).length;
-      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
-      document.getElementById("percent").textContent = pct + "%";
-      document.getElementById("bar").style.strokeDashoffset = 289 - (289 * pct) / 100;
-      document.getElementById("summary-text").textContent =
-        total === 0 ? "Додай першу звичку" : `Виконано ${done} з ${total}`;
+      // Кільце: враховуємо лише активні звички, які сьогодні "в плані"
+      const needed = active.filter((h) => {
+        if (h.done[t]) return true;
+        if (frozen) return false;
+        const f = freqOf(h);
+        return f.type === "daily" ||
+          (f.type === "days" && f.days.includes(parseKey(t).getDay())) ||
+          (f.type === "weekly" && weekCount(h, t) < f.n);
+      });
+      const done = needed.filter((h) => h.done[t]).length;
+      const pct = needed.length ? Math.round((done / needed.length) * 100) : (active.length ? 100 : 0);
+      const empty = frozen && !needed.length;
+      document.getElementById("percent").textContent = empty ? "–" : pct + "%";
+      document.getElementById("bar").style.strokeDashoffset = 289 - (289 * (empty ? 0 : pct)) / 100;
+      document.getElementById("summary-text").textContent = frozen
+        ? "День заморожено, серія збережена"
+        : needed.length ? `Виконано ${done} з ${needed.length}`
+        : active.length ? "Сьогодні відпочинок"
+        : habits.length ? "Усі звички на паузі" : "Додай першу звичку";
+
+      const fb = document.getElementById("freeze-btn");
+      const left = freezesLeft(t);
+      fb.hidden = habits.length === 0;
+      fb.textContent = frozen ? "Зняти заморозку" : `Заморозити день (залишилось ${left})`;
+      fb.disabled = !frozen && left <= 0;
+
+      renderInactive(inactive);
     }
 
     // ---------- Вкладка "Календар" ----------
@@ -339,10 +1015,12 @@
     function dayLevel(key) {
       if (habits.length === 0) return 0;
       if (filter === "all") {
-        const done = habits.filter((h) => h.done[key]).length;
+        const due = habits.filter((h) => isDue(h, key));
+        if (!due.length) return 0;
+        const done = due.filter((h) => h.done[key]).length;
         if (done === 0) return 0;
-        if (done === habits.length) return 3;
-        return done / habits.length < 0.5 ? 1 : 2;
+        if (done === due.length) return 3;
+        return done / due.length < 0.5 ? 1 : 2;
       }
       const habit = habits.find((h) => String(h.id) === String(filter));
       return habit && habit.done[key] ? 3 : 0;
@@ -384,6 +1062,7 @@
         if (key > tKey) btn.classList.add("future");
         if (key === tKey) btn.classList.add("today");
         if (key === selectedDate) btn.classList.add("selected");
+        if (freezes[key]) btn.classList.add("frozen");
         btn.textContent = d;
         btn.dataset.date = key;
         grid.appendChild(btn);
@@ -413,16 +1092,38 @@
         return;
       }
 
-      habits.forEach((habit) => {
+      habits.filter((h) => activeOn(h, selectedDate) || h.done[selectedDate]).forEach((habit) => {
         const on = !!habit.done[selectedDate];
+        const rest = !on && freqOf(habit).type === "days" && !isDue(habit, selectedDate);
         const row = document.createElement("button");
         row.className = "detail-row " + (on ? "on" : "off");
         row.dataset.id = habit.id;
         row.disabled = isFuture;
         row.innerHTML = `<span class="mark">${on ? "✓" : ""}</span><span class="t"></span>`;
-        row.querySelector(".t").textContent = habit.name;
-        box.appendChild(row);
+        row.querySelector(".t").textContent = habit.name + (rest ? " (відпочинок)" : "");
+        const nc = noteControls(habit, selectedDate, { disabled: isFuture });
+        nc.area.className = "detail-item-note";
+        const top = document.createElement("div");
+        top.className = "detail-top";
+        top.append(row, nc.more);
+        box.append(top, nc.area);
       });
+
+      const fz = document.createElement("div");
+      fz.className = "freeze-row";
+      const isFrozen = !!freezes[selectedDate];
+      const left = freezesLeft(selectedDate);
+      const fbtn = document.createElement("button");
+      fbtn.type = "button";
+      fbtn.className = "link";
+      fbtn.textContent = isFrozen ? "Зняти заморозку" : "Заморозити день";
+      fbtn.disabled = !isFrozen && left <= 0;
+      fbtn.addEventListener("click", () => toggleFreeze(selectedDate));
+      const fnote = document.createElement("span");
+      fnote.className = "hint";
+      fnote.textContent = `Заморозок цього місяця залишилось: ${left} з ${MAX_FREEZE}`;
+      fz.append(fbtn, fnote);
+      box.appendChild(fz);
 
       box.insertAdjacentHTML(
         "beforeend",
@@ -430,14 +1131,575 @@
       );
     }
 
-    document.querySelectorAll(".tab").forEach((tab) => {
+    // ---------- Коментарі ----------
+    function makeNoteInput(habit, key, placeholder) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "note-input";
+      input.placeholder = placeholder;
+      input.maxLength = 120;
+      input.value = (habit.notes && habit.notes[key]) || "";
+      input.addEventListener("input", () => {
+        habit.notes = habit.notes || {};
+        const text = input.value.trim();
+        if (text) habit.notes[key] = text; else delete habit.notes[key];
+        save();
+      });
+      return input;
+    }
+
+    // Кнопка з трьома крапками і прихований коментар
+    const DOTS_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+    const closeAllPops = (except) => document.querySelectorAll(".pop").forEach((p) => { if (p !== except) p.hidden = true; });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".more-wrap")) closeAllPops(); });
+
+    // Повертає { more: кнопка з меню, area: місце для тексту коментаря }
+    function noteControls(habit, key, opts = {}) {
+      const area = document.createElement("div");
+      const text = document.createElement("div");
+      text.className = "note-text";
+      const sync = () => {
+        const v = (habit.notes && habit.notes[key]) || "";
+        text.textContent = v;
+        text.hidden = !v;
+      };
+      sync();
+      area.appendChild(text);
+
+      const more = document.createElement("div");
+      more.className = "more-wrap";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "more";
+      btn.setAttribute("aria-label", "Меню");
+      btn.innerHTML = DOTS_SVG;
+      btn.disabled = !!opts.disabled;
+      const pop = document.createElement("div");
+      pop.className = "pop";
+      pop.hidden = true;
+
+      const noteItem = document.createElement("button");
+      noteItem.type = "button";
+      noteItem.className = "pop-item";
+      pop.appendChild(noteItem);
+      (opts.items || []).forEach((it) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "pop-item" + (it.danger ? " danger" : "");
+        b.textContent = it.label;
+        b.addEventListener("click", () => { pop.hidden = true; it.fn(); });
+        pop.appendChild(b);
+      });
+
+      btn.addEventListener("click", () => {
+        closeAllPops(pop);
+        noteItem.textContent = (habit.notes && habit.notes[key]) ? "Змінити коментар" : "Додати коментар";
+        pop.hidden = !pop.hidden;
+      });
+      noteItem.addEventListener("click", () => {
+        pop.hidden = true;
+        const input = makeNoteInput(habit, key, "Коментар");
+        text.hidden = true;
+        area.appendChild(input);
+        input.focus();
+        input.addEventListener("blur", () => { input.remove(); sync(); });
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") input.blur(); });
+      });
+
+      more.append(btn, pop);
+      return { more, area };
+    }
+
+    // ---------- Вкладка "Цілі" ----------
+    // Рахуємо, скільки днів минуло і скільки відміток звичок зроблено
+    function goalStats(goal) {
+      const today = todayKey();
+      const total = dayDiff(goal.start, goal.end) + 1;
+      const elapsed = Math.max(0, Math.min(total, dayDiff(goal.start, today) + 1));
+      const linked = habits.filter((h) => goal.habitIds.includes(h.id));
+      let expected = 0, actual = 0;
+
+      linked.forEach((h) => {
+        const r = habitPeriod(h, goal.start, goal.end);
+        expected += r.exp;
+        actual += r.act;
+      });
+      expected = Math.round(expected);
+      actual = Math.round(actual);
+
+      return {
+        total, elapsed, left: total - elapsed, linked, expected, actual,
+        pct: expected ? Math.round((actual / expected) * 100) : null
+      };
+    }
+
+    const ICON_STAR = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+    const CHEERS = [
+      "Ти дійшла до вершини! Кожен маленький крок привів тебе сюди.",
+      "Усі сходинки пройдено. Ти справді це зробила!",
+      "Ось що буває, коли не здаєшся. Ціль досягнута!",
+      "Маленькі кроки склалися у велику перемогу.",
+      "Ти зробила те, що планувала. Час себе похвалити!",
+      "Сходи пройдено. Яка наступна вершина?"
+    ];
+    const plural = (n, f) => {
+      const a = n % 10, b = n % 100;
+      return b >= 11 && b <= 14 ? f[2] : a === 1 ? f[0] : a >= 2 && a <= 4 ? f[1] : f[2];
+    };
+
+    function renderGoals() {
+      const box = document.getElementById("goals");
+      box.innerHTML = "";
+
+      if (goals.length === 0) {
+        box.innerHTML = '<p class="empty">Тут будуть твої цілі. Додай першу, вибери термін і звички, які до неї ведуть.</p>';
+        return;
+      }
+
+      const today = todayKey();
+
+      goals.forEach((goal) => {
+        const st = goalStats(goal);
+        const timePct = Math.round((st.elapsed / st.total) * 100);
+
+        let timeLabel;
+        if (today < goal.start) timeLabel = "Ще не почалась";
+        else if (today > goal.end) timeLabel = "Термін завершено";
+        else timeLabel = `День ${st.elapsed} з ${st.total}, залишилось ${st.left}`;
+
+        // Останні 14 днів: чи виконані всі звички цілі
+        let strip = "";
+        for (let i = 13; i >= 0; i--) {
+          const key = daysAgo(i);
+          const active = st.linked.filter((h) => toKey(new Date(h.id)) <= key && isDue(h, key));
+          let cls = "";
+          if (key >= goal.start && key <= goal.end && active.length > 0) {
+            const done = active.filter((h) => h.done[key]).length;
+            cls = done === active.length ? "on" : done > 0 ? "half" : "miss";
+          }
+          strip += `<span class="${cls}"></span>`;
+        }
+
+        const total = goal.steps.length;
+        const doneSteps = goal.steps.filter((x) => x.done).length;
+
+        const el = document.createElement("div");
+        el.className = "goal";
+        el.innerHTML = `
+          <div class="goal-top">
+            <h3></h3>
+            <div class="goal-actions">
+              <button class="link" data-goal-edit="${goal.id}">Змінити</button>
+              <button class="del" aria-label="Видалити ціль" data-goal-del="${goal.id}">×</button>
+            </div>
+          </div>
+          <div class="goal-dates">${fmtDate(goal.start)} - ${fmtDate(goal.end)}</div>
+
+          <div class="label-row"><span>Час</span><span>${timeLabel}</span></div>
+          <div class="progress time"><div style="width:${timePct}%"></div></div>
+
+          ${st.linked.length ? `
+            <div class="label-row"><span>Звички</span><span>${st.pct === null ? "Немає даних" : `${st.pct}% (${st.actual} з ${st.expected} відміток)`}</span></div>
+            <div class="progress"><div style="width:${st.pct || 0}%"></div></div>
+            <div class="strip">${strip}</div>
+            <div class="strip-note">Останні 14 днів</div>
+          ` : ""}
+
+          <div class="chips"></div>
+          <div class="stairs-box"></div>
+
+          <div class="cp-title">Контрольні точки${total ? ` (${doneSteps} з ${total})` : ""}</div>
+          <div class="steps"></div>
+          <div class="step-form">
+            <input type="text" placeholder="Наприклад: мінус 2 кг" maxlength="60" autocomplete="off">
+            <button data-goal-add="${goal.id}">Додати</button>
+          </div>
+        `;
+        el.querySelector("h3").textContent = goal.title;
+
+        const chips = el.querySelector(".chips");
+        st.linked.forEach((h) => {
+          const c = document.createElement("span");
+          c.textContent = h.name;
+          chips.appendChild(c);
+        });
+
+        const stepsBox = el.querySelector(".steps");
+        goal.steps.forEach((step) => {
+          const b = document.createElement("button");
+          b.className = "step" + (step.done ? " on" : "");
+          b.dataset.goal = goal.id;
+          b.dataset.step = step.id;
+          b.innerHTML = `<span class="box">${step.done ? "✓" : ""}</span><span class="t"></span>`;
+          b.querySelector(".t").textContent = step.text;
+          stepsBox.appendChild(b);
+        });
+
+        const stairsBox = el.querySelector(".stairs-box");
+        if (total > 0 && doneSteps === total) {
+          const cheer = document.createElement("div");
+          cheer.className = "cheer";
+          cheer.innerHTML = ICON_STAR + "<span></span>";
+          cheer.lastChild.textContent = CHEERS[goal.id % CHEERS.length];
+          stairsBox.appendChild(cheer);
+        } else {
+          stairsBox.remove();
+        }
+
+        box.appendChild(el);
+        if (refocusGoal === goal.id) el.querySelector(".step-form input").focus();
+      });
+      refocusGoal = null;
+    }
+
+    // ---------- Вкладка "Сходи" ----------
+    let stairGoalId = null;
+
+    // Статус кожного дня цілі: done, half, miss, rest (відпочинок) або future (ще не було)
+    function dayStatuses(goal) {
+      const today = todayKey();
+      const linked = habits.filter((h) => goal.habitIds.includes(h.id));
+      const total = dayDiff(goal.start, goal.end) + 1;
+      const result = [];
+      for (let i = 0; i < total; i++) {
+        const key = addDays(goal.start, i);
+        const active = linked.filter((h) => toKey(new Date(h.id)) <= key && isDue(h, key));
+        const doneCount = active.filter((h) => h.done[key]).length;
+        let status = key < today ? "rest" : "future";
+        if (key <= today && active.length > 0) {
+          if (doneCount === active.length) status = "done";
+          else if (doneCount > 0) status = "half";
+          else if (key < today) status = "miss";
+        }
+        result.push({ key, status });
+      }
+      return result;
+    }
+
+    // Висота сходинки від 0.1 до 1
+    const stairHeight = (i, n) => (n === 1 ? 1 : 0.1 + 0.9 * (i / (n - 1)));
+
+    function stairsSvg(statuses) {
+      const n = statuses.length, H = 200;
+      let rects = "";
+      statuses.forEach((d, i) => {
+        const h = stairHeight(i, n) * H;
+        rects += `<rect class="st-${d.status}" x="${i * 10}" y="${(H - h).toFixed(2)}" width="8.4" height="${h.toFixed(2)}"/>`;
+      });
+      return `<svg class="sp-svg" viewBox="0 0 ${n * 10} ${H}" preserveAspectRatio="none">${rects}</svg>`;
+    }
+
+    // Кільце, розбите на стільки сегментів, скільки днів у періоді
+    function ringSvg(statuses) {
+      const n = statuses.length, r = 76, c = 90;
+      const seg = 360 / n, gap = Math.min(1.2, seg * 0.2);
+      const pt = (deg) => {
+        const a = ((deg - 90) * Math.PI) / 180;
+        return [(c + r * Math.cos(a)).toFixed(2), (c + r * Math.sin(a)).toFixed(2)];
+      };
+      let paths = "";
+      statuses.forEach((d, i) => {
+        const a1 = i * seg + gap / 2, a2 = (i + 1) * seg - gap / 2;
+        const [x1, y1] = pt(a1), [x2, y2] = pt(a2);
+        paths += `<path class="rg-${d.status}" d="M${x1} ${y1} A${r} ${r} 0 ${a2 - a1 > 180 ? 1 : 0} 1 ${x2} ${y2}"/>`;
+      });
+      return `<svg class="sp-ring" viewBox="0 0 180 180">${paths}</svg>`;
+    }
+
+    function renderStairs() {
+      const select = document.getElementById("stairs-select");
+      const page = document.getElementById("stairs-page");
+      select.innerHTML = "";
+      page.innerHTML = "";
+
+      if (goals.length === 0) {
+        select.hidden = true;
+        page.innerHTML = '<p class="empty">Спочатку створи ціль на вкладці «Цілі». Тут буде видно, як ти піднімаєшся до неї день за днем.</p>';
+        return;
+      }
+
+      goals.forEach((g) => {
+        const opt = document.createElement("option");
+        opt.value = g.id;
+        opt.textContent = g.title;
+        select.appendChild(opt);
+      });
+      if (!goals.some((g) => g.id === stairGoalId)) stairGoalId = goals[0].id;
+      select.value = stairGoalId;
+      select.hidden = goals.length < 2;
+
+      const goal = goals.find((g) => g.id === stairGoalId);
+      const statuses = dayStatuses(goal);
+      const n = statuses.length;
+      const count = (s) => statuses.filter((d) => d.status === s).length;
+      const done = count("done"), half = count("half"), miss = count("miss");
+      const rest = count("rest"), future = count("future");
+      const today = todayKey();
+      const pastDays = done + half + miss;
+      const hasHabits = habits.some((h) => goal.habitIds.includes(h.id));
+
+      // Позначка "ти тут" на сьогоднішній сходинці
+      let pin = "";
+      if (today >= goal.start && today <= goal.end) {
+        const idx = dayDiff(goal.start, today);
+        pin = `<div class="sp-pin" style="left:${(((idx + 0.5) / n) * 100).toFixed(2)}%;bottom:${(stairHeight(idx, n) * 100).toFixed(2)}%"></div>`;
+      }
+
+      page.innerHTML = `
+        <div class="sp-head"><h2></h2><p>${fmtDate(goal.start)} - ${fmtDate(goal.end)}</p></div>
+        <div class="sp-extra"></div>
+        <div class="sp-card">
+          <div class="sp-title">Сходи до цілі</div>
+          <div class="sp-sub">Кожна сходинка - один день. Виконаний день замальовується.</div>
+          <div class="sp-stairs">${stairsSvg(statuses)}${pin}<div class="sp-flag"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></div></div>
+          <div class="sp-axis"><span>${fmtDate(goal.start)}</span><span>${fmtDate(goal.end)}</span></div>
+          <div class="sp-legend">
+            <span><i class="l-done"></i>Виконано</span>
+            <span><i class="l-half"></i>Частково</span>
+            <span><i class="l-miss"></i>Пропущено</span>
+            <span><i class="l-future"></i>Попереду або відпочинок</span>
+          </div>
+        </div>
+        <div class="sp-card">
+          <div class="sp-title">Період: ${n} ${plural(n, ["день", "дні", "днів"])}</div>
+          <div class="sp-sub">Кожен сегмент кільця - один день періоду.</div>
+          <div class="sp-ring-wrap">${ringSvg(statuses)}
+            <div class="sp-ring-center"><b>${done}</b><span>днів із ${n}</span></div>
+          </div>
+          <div class="sp-stats">
+            <div><span><i class="l-done"></i>Виконано повністю</span><span>${done}</span></div>
+            <div><span><i class="l-half"></i>Частково</span><span>${half}</span></div>
+            <div><span><i class="l-miss"></i>Пропущено</span><span>${miss}</span></div>
+            <div><span><i class="l-future"></i>Відпочинок</span><span>${rest}</span></div>
+            <div><span><i class="l-future"></i>Попереду</span><span>${future}</span></div>
+          </div>
+        </div>
+      `;
+      page.querySelector("h2").textContent = goal.title;
+
+      // Повідомлення над сходами
+      const extra = page.querySelector(".sp-extra");
+      const allSteps = goal.steps.length > 0 && goal.steps.every((x) => x.done);
+      let motto = "";
+      if (!hasHabits) motto = "До цілі не прив'язано звичок, тому сходи не замальовуються. Додай їх через «Змінити» на вкладці «Цілі».";
+      else if (today < goal.start) motto = "Ціль ще не почалась. Перша сходинка чекає на тебе " + fmtDate(goal.start) + ".";
+      else if (today > goal.end) motto = `Шлях пройдено! Ти повністю виконала ${done} днів із ${n}.`;
+      else if (pastDays > 0 && done / pastDays >= 0.8) motto = "Ти впевнено підіймаєшся вгору. Так тримати!";
+      else if (pastDays > 0 && done / pastDays >= 0.5) motto = "Кожна сходинка рахується. Ще трохи, і ти наздоженеш темп.";
+      else motto = "Нова сходинка починається сьогодні. Один день за раз.";
+
+      if (allSteps) {
+        const cheer = document.createElement("div");
+        cheer.className = "cheer";
+        cheer.innerHTML = ICON_STAR + "<span></span>";
+          cheer.lastChild.textContent = CHEERS[goal.id % CHEERS.length];
+        extra.appendChild(cheer);
+      }
+      const m = document.createElement("div");
+      m.className = "sp-motto";
+      m.textContent = motto;
+      extra.appendChild(m);
+    }
+
+    // ---------- Вкладка "Статистика" ----------
+    let statsFilter = "all";
+
+    function renderStats() {
+      const sel = document.getElementById("stats-select");
+      const page = document.getElementById("stats-page");
+      sel.innerHTML = '<option value="all">Усі звички</option>';
+      habits.forEach((h) => {
+        const o = document.createElement("option");
+        o.value = h.id;
+        o.textContent = h.name;
+        sel.appendChild(o);
+      });
+      if (statsFilter !== "all" && !habits.some((h) => String(h.id) === String(statsFilter))) statsFilter = "all";
+      sel.value = statsFilter;
+      sel.hidden = habits.length === 0;
+
+      if (!habits.length) {
+        page.innerHTML = '<p class="empty">Додай звички, і тут з\'явиться статистика.</p>';
+        return;
+      }
+      const chosen = statsFilter === "all" ? habits : habits.filter((h) => String(h.id) === String(statsFilter));
+      const today = todayKey();
+
+      // Відсоток виконання плану за період
+      const rate = (a, b) => {
+        let e = 0, c = 0;
+        chosen.forEach((h) => { const r = habitPeriod(h, a, b); e += r.exp; c += r.act; });
+        return e ? Math.round((c / e) * 100) : null;
+      };
+      const bars = (items) => `<div class="bars">${items.map((i) => `
+        <div class="bar-col${i.top ? " top" : ""}">
+          <span class="bar-val">${i.v === null ? "" : i.v + (i.raw ? "" : "%")}</span>
+          <div class="bar-track"><div style="height:${i.h}%"></div></div>
+          <span class="bar-lab">${i.l}</span>
+        </div>`).join("")}</div>`;
+
+      const weeks = [], ws0 = weekStart(today);
+      for (let i = 7; i >= 0; i--) {
+        const a = addDays(ws0, -7 * i), v = rate(a, addDays(a, 6));
+        weeks.push({ v, h: v || 0, l: parseKey(a).toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit" }) });
+      }
+      const months = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const v = rate(toKey(d), toKey(new Date(d.getFullYear(), d.getMonth() + 1, 0)));
+        months.push({ v, h: v || 0, l: d.toLocaleDateString("uk-UA", { month: "short" }) });
+      }
+
+      // Відмітки за днями тижня, всього і найкращий тиждень
+      const wd = [0, 0, 0, 0, 0, 0, 0], weekMap = {};
+      let total = 0;
+      chosen.forEach((h) => Object.keys(h.done).forEach((k) => {
+        if (!h.done[k]) return;
+        total++;
+        wd[parseKey(k).getDay()]++;
+        const w = weekStart(k);
+        weekMap[w] = (weekMap[w] || 0) + 1;
+      }));
+      const bestWeek = Math.max(0, ...Object.values(weekMap));
+      const maxWd = Math.max(...wd);
+      const bestDay = maxWd ? DAY_FULL[wd.indexOf(maxWd)] : "-";
+      const wdBars = [1, 2, 3, 4, 5, 6, 0].map((d) => ({
+        v: wd[d], raw: true, h: maxWd ? Math.round((wd[d] / maxWd) * 100) : 0,
+        l: DAY_SHORT[d], top: maxWd > 0 && wd[d] === maxWd
+      }));
+
+      const unit = (h) => (freqOf(h).type === "weekly" ? "тиж." : "дн.");
+      const units = new Set(chosen.map(unit));
+      const u = units.size === 1 ? " " + [...units][0] : "";
+      const cur = Math.max(0, ...chosen.map(getStreak));
+      const best = Math.max(0, ...chosen.map(bestStreak));
+
+      page.innerHTML = `
+        <div class="tiles">
+          <div class="tile"><b>${cur}${u}</b><span>Поточна серія</span></div>
+          <div class="tile"><b>${best}${u}</b><span>Найдовша серія</span></div>
+          <div class="tile"><b>${bestWeek}</b><span>Рекорд: відміток за тиждень</span></div>
+          <div class="tile"><b>${total}</b><span>Усього відміток</span></div>
+        </div>
+        <div class="sp-card"><div class="sp-title">По тижнях</div>
+          <div class="sp-sub">Відсоток виконаного плану, 8 останніх тижнів</div>${bars(weeks)}</div>
+        <div class="sp-card"><div class="sp-title">По місяцях</div>
+          <div class="sp-sub">Відсоток виконаного плану, 6 останніх місяців</div>${bars(months)}</div>
+        <div class="sp-card"><div class="sp-title">Найкращий день тижня: ${bestDay}</div>
+          <div class="sp-sub">Скільки відміток зроблено у кожен день тижня</div>${bars(wdBars)}</div>
+        <div class="sp-card"><div class="sp-title">Серії по звичках</div>
+          <div class="sp-sub">Поточна / найдовша</div><div id="streak-list"></div></div>
+      `;
+      const box = page.querySelector("#streak-list");
+      chosen.forEach((h) => {
+        const row = document.createElement("div");
+        row.className = "streak-row";
+        row.innerHTML = "<span></span><span></span>";
+        row.firstChild.textContent = h.name;
+        row.lastChild.textContent = `${getStreak(h)} / ${bestStreak(h)} ${unit(h)}`;
+        box.appendChild(row);
+      });
+    }
+
+    // Редактор цілі (створення і зміна)
+    function openEditor(goal) {
+      editingId = goal ? goal.id : null;
+      document.getElementById("editor-title").textContent = goal ? "Змінити ціль" : "Нова ціль";
+      document.getElementById("g-title").value = goal ? goal.title : "";
+      document.getElementById("g-start").value = goal ? goal.start : todayKey();
+      document.getElementById("g-end").value = goal ? goal.end : addMonths(todayKey(), 3);
+
+      const list = document.getElementById("g-habit-list");
+      list.innerHTML = "";
+      if (habits.length === 0) {
+        list.innerHTML = '<p class="hint">Спочатку додай звички на вкладці «Сьогодні».</p>';
+      }
+      habits.filter((h) => !h.archivedAt).forEach((h) => {
+        const label = document.createElement("label");
+        label.className = "check-row";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = h.id;
+        cb.checked = !!goal && goal.habitIds.includes(h.id);
+        const name = document.createElement("span");
+        name.textContent = h.name;
+        label.append(cb, name);
+        list.appendChild(label);
+      });
+
+      document.getElementById("editor").hidden = false;
+      document.getElementById("new-goal").hidden = true;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.getElementById("g-title").focus();
+    }
+
+    function closeEditor() {
+      editingId = null;
+      document.getElementById("editor").hidden = true;
+      document.getElementById("new-goal").hidden = false;
+    }
+
+    // ---------- Вибір періодичності у формі ----------
+    function readFreq() {
+      const type = document.getElementById("freq-type").value;
+      if (type === "days") {
+        return { type, days: [...document.querySelectorAll("#freq-days .on")].map((b) => Number(b.dataset.d)) };
+      }
+      if (type === "weekly") return { type, n: Number(document.getElementById("freq-n").value) };
+      return { type: "daily" };
+    }
+    function updateFreqChip() {
+      const f = readFreq();
+      let text = "Щодня";
+      if (f.type === "days") {
+        text = f.days.length
+          ? f.days.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map((d) => DAY_SHORT[d]).join(", ")
+          : "Обери дні";
+      }
+      if (f.type === "weekly") text = f.n + " р/тиж";
+      document.getElementById("freq-label").textContent = text;
+    }
+    document.getElementById("freq-toggle").addEventListener("click", () => {
+      const panel = document.getElementById("freq-panel");
+      panel.hidden = !panel.hidden;
+    });
+    document.getElementById("freq-type").addEventListener("change", (e) => {
+      document.getElementById("freq-days").hidden = e.target.value !== "days";
+      document.getElementById("freq-n").hidden = e.target.value !== "weekly";
+      updateFreqChip();
+    });
+    document.getElementById("freq-n").addEventListener("change", updateFreqChip);
+    document.getElementById("freq-days").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (b) { b.classList.toggle("on"); updateFreqChip(); }
+    });
+
+    // ---------- Події ----------
+    const menuEl = document.getElementById("menu");
+    document.getElementById("burger").addEventListener("click", (e) => {
+      e.stopPropagation();
+      menuEl.hidden = !menuEl.hidden;
+    });
+    document.addEventListener("click", (e) => {
+      if (!menuEl.hidden && !e.target.closest(".menu-wrap")) menuEl.hidden = true;
+    });
+    document.querySelectorAll("[data-tab]").forEach((tab) => {
       tab.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t === tab));
         const name = tab.dataset.tab;
-        document.getElementById("view-today").classList.toggle("active", name === "today");
-        document.getElementById("view-calendar").classList.toggle("active", name === "calendar");
+        document.querySelectorAll("[data-tab]").forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+        document.getElementById("burger").classList.toggle("active", ["calendar", "stats", "theme", "backup"].includes(name));
+        menuEl.hidden = true;
+        ["today", "calendar", "goals", "stairs", "stats", "theme", "backup"].forEach((v) => {
+          document.getElementById("view-" + v).classList.toggle("active", name === v);
+        });
         document.getElementById("add-bar").classList.toggle("hidden", name !== "today");
+        if (name === "today") renderToday();
         if (name === "calendar") renderCalendar();
+        if (name === "goals") renderGoals();
+        if (name === "stairs") renderStairs();
+        if (name === "stats") renderStats();
+        if (name === "theme") renderTheme();
+        if (name === "backup") renderBackup();
       });
     });
 
@@ -455,6 +1717,10 @@
       filter = e.target.value;
       renderCalendar();
     });
+    document.getElementById("stats-select").addEventListener("change", (e) => {
+      statsFilter = e.target.value;
+      renderStats();
+    });
     document.getElementById("grid").addEventListener("click", (e) => {
       const day = e.target.closest("[data-date]");
       if (!day) return;
@@ -471,7 +1737,6 @@
 
     document.getElementById("list").addEventListener("click", (e) => {
       const checkBtn = e.target.closest("[data-id]");
-      const delBtn = e.target.closest("[data-del]");
 
       if (checkBtn) {
         const habit = habits.find((h) => h.id === Number(checkBtn.dataset.id));
@@ -479,9 +1744,77 @@
         habit.done[today] = !habit.done[today];
         save(); renderToday();
       }
-      if (delBtn) {
-        habits = habits.filter((h) => h.id !== Number(delBtn.dataset.del));
-        save(); renderToday();
+    });
+
+    document.getElementById("new-goal").addEventListener("click", () => openEditor(null));
+    document.getElementById("stairs-select").addEventListener("change", (e) => {
+      stairGoalId = Number(e.target.value);
+      renderStairs();
+    });
+    document.getElementById("g-cancel").addEventListener("click", closeEditor);
+
+    document.querySelectorAll(".presets button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const startInput = document.getElementById("g-start");
+        if (!startInput.value) startInput.value = todayKey();
+        document.getElementById("g-end").value = addMonths(startInput.value, Number(btn.dataset.months));
+      });
+    });
+
+    document.getElementById("editor").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = document.getElementById("g-title").value.trim();
+      const start = document.getElementById("g-start").value;
+      const end = document.getElementById("g-end").value;
+      if (!title) return;
+      if (!start || !end || end < start) {
+        alert("Вкажи дати: кінець має бути не раніше початку.");
+        return;
+      }
+      const habitIds = [...document.querySelectorAll("#g-habit-list input:checked")].map((c) => Number(c.value));
+
+      if (editingId) {
+        const goal = goals.find((g) => g.id === editingId);
+        Object.assign(goal, { title, start, end, habitIds });
+      } else {
+        goals.push({ id: Date.now(), title, start, end, habitIds, steps: [] });
+      }
+      saveGoals(); closeEditor(); renderGoals();
+    });
+
+    document.getElementById("goals").addEventListener("click", (e) => {
+      const stepBtn = e.target.closest("[data-step]");
+      const addBtn = e.target.closest("[data-goal-add]");
+      const delBtn = e.target.closest("[data-goal-del]");
+      const editBtn = e.target.closest("[data-goal-edit]");
+
+      if (editBtn) {
+        openEditor(goals.find((g) => g.id === Number(editBtn.dataset.goalEdit)));
+      }
+      if (stepBtn) {
+        const goal = goals.find((g) => g.id === Number(stepBtn.dataset.goal));
+        const step = goal.steps.find((x) => x.id === Number(stepBtn.dataset.step));
+        step.done = !step.done;
+        saveGoals(); renderGoals();
+      }
+      if (addBtn) {
+        const goal = goals.find((g) => g.id === Number(addBtn.dataset.goalAdd));
+        const text = addBtn.parentElement.querySelector("input").value.trim();
+        if (!text) return;
+        goal.steps.push({ id: Date.now(), text, done: false });
+        refocusGoal = goal.id;
+        saveGoals(); renderGoals();
+      }
+      if (delBtn && confirm("Видалити ціль разом з контрольними точками?")) {
+        goals = goals.filter((g) => g.id !== Number(delBtn.dataset.goalDel));
+        saveGoals(); renderGoals();
+      }
+    });
+
+    // Enter у полі контрольної точки = кнопка "Додати"
+    document.getElementById("goals").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target.matches(".step-form input")) {
+        e.target.parentElement.querySelector("button").click();
       }
     });
 
@@ -490,9 +1823,150 @@
       const input = document.getElementById("input");
       const name = input.value.trim();
       if (!name) return;
-      habits.push({ id: Date.now(), name, done: {} });
+      const freq = readFreq();
+      if (freq.type === "days" && !freq.days.length) {
+        alert("Вибери хоча б один день тижня.");
+        return;
+      }
+      habits.push({ id: Date.now(), name, done: {}, freq });
       input.value = "";
+      document.getElementById("freq-type").value = "daily";
+      document.querySelectorAll("#freq-days .on").forEach((b) => b.classList.remove("on"));
+      document.getElementById("freq-days").hidden = true;
+      document.getElementById("freq-n").hidden = true;
+      document.getElementById("freq-panel").hidden = true;
+      updateFreqChip();
       save(); renderToday();
+    });
+
+    // ---------- Редагування звички ----------
+    let editingHabit = null, editFreq = null;
+
+    function buildFreqControls(freq) {
+      const f = freq || { type: "daily" };
+      const wrap = document.createElement("div");
+      wrap.className = "freq-row";
+      const sel = document.createElement("select");
+      sel.innerHTML = '<option value="daily">Щодня</option><option value="days">Певні дні</option><option value="weekly">Разів на тиждень</option>';
+      sel.value = f.type;
+      const pick = document.createElement("div");
+      pick.className = "day-pick";
+      [1, 2, 3, 4, 5, 6, 0].forEach((d) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = DAY_SHORT[d];
+        b.dataset.d = d;
+        if (f.type === "days" && f.days.includes(d)) b.classList.add("on");
+        b.addEventListener("click", () => b.classList.toggle("on"));
+        pick.appendChild(b);
+      });
+      const nSel = document.createElement("select");
+      [1, 2, 3, 4, 5, 6].forEach((n) => {
+        const o = document.createElement("option");
+        o.value = n; o.textContent = n;
+        nSel.appendChild(o);
+      });
+      nSel.value = f.type === "weekly" ? f.n : 3;
+      const sync = () => { pick.hidden = sel.value !== "days"; nSel.hidden = sel.value !== "weekly"; };
+      sel.addEventListener("change", sync);
+      sync();
+      wrap.append(sel, pick, nSel);
+      return {
+        el: wrap,
+        read() {
+          if (sel.value === "days") return { type: "days", days: [...pick.querySelectorAll(".on")].map((b) => Number(b.dataset.d)) };
+          if (sel.value === "weekly") return { type: "weekly", n: Number(nSel.value) };
+          return { type: "daily" };
+        }
+      };
+    }
+
+    function openHabitEditor(h) {
+      editingHabit = h;
+      document.getElementById("e-name").value = h.name;
+      editFreq = buildFreqControls(h.freq);
+      const box = document.getElementById("e-freq");
+      box.innerHTML = "";
+      box.appendChild(editFreq.el);
+      document.getElementById("edit-modal").hidden = false;
+      document.getElementById("e-name").focus();
+    }
+    function closeHabitEditor() {
+      editingHabit = null;
+      document.getElementById("edit-modal").hidden = true;
+    }
+    document.getElementById("edit-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("e-name").value.trim();
+      const freq = editFreq.read();
+      if (!name) return;
+      if (freq.type === "days" && !freq.days.length) { alert("Вибери хоча б один день тижня."); return; }
+      editingHabit.name = name;
+      editingHabit.freq = freq;
+      save(); closeHabitEditor(); renderToday();
+    });
+    document.getElementById("e-cancel").addEventListener("click", closeHabitEditor);
+    document.getElementById("edit-modal").addEventListener("click", (e) => { if (e.target.id === "edit-modal") closeHabitEditor(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !document.getElementById("edit-modal").hidden) closeHabitEditor(); });
+    document.getElementById("e-pause").addEventListener("click", () => {
+      editingHabit.pauses = (editingHabit.pauses || []).concat({ from: todayKey(), to: null });
+      save(); closeHabitEditor(); renderToday();
+    });
+    document.getElementById("e-archive").addEventListener("click", () => {
+      if (!confirm("Перенести звичку в архів? Історія збережеться, її можна буде відновити.")) return;
+      editingHabit.archivedAt = todayKey();
+      save(); closeHabitEditor(); renderToday();
+    });
+
+    document.getElementById("freeze-btn").addEventListener("click", () => toggleFreeze(todayKey()));
+
+    // ---------- Резервна копія ----------
+    function renderBackup() {
+      const last = localStorage.getItem("backup-last");
+      document.getElementById("backup-info").textContent = last
+        ? "Остання копія: " + new Date(last).toLocaleString("uk-UA")
+        : "Копію ще не зберігали.";
+    }
+    document.getElementById("export-btn").addEventListener("click", () => {
+      const data = { app: "habits", version: 1, exportedAt: new Date().toISOString(), habits, goals, freezes, theme };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "habits-backup-" + todayKey() + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      localStorage.setItem("backup-last", new Date().toISOString());
+      renderBackup();
+    });
+    document.getElementById("import-btn").addEventListener("click", () => document.getElementById("import-file").click());
+    document.getElementById("import-file").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      e.target.value = "";
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        let d;
+        try {
+          d = JSON.parse(reader.result);
+          if (!d || d.app !== "habits" || !Array.isArray(d.habits)) throw new Error("format");
+        } catch (err) {
+          alert("Не вдалося прочитати файл. Потрібен файл копії, збережений у цьому застосунку.");
+          return;
+        }
+        const cleanHabits = d.habits
+          .filter((h) => h && typeof h.name === "string" && Number.isFinite(h.id))
+          .map((h) => ({ ...h, done: h.done && typeof h.done === "object" ? h.done : {} }));
+        const cleanGoals = Array.isArray(d.goals) ? d.goals : [];
+        if (!confirm(`Замінити поточні дані копією? У файлі: звичок ${cleanHabits.length}, цілей ${cleanGoals.length}.`)) return;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanHabits));
+        localStorage.setItem("goals-v1", JSON.stringify(cleanGoals));
+        localStorage.setItem("freeze-v1", JSON.stringify(d.freezes && typeof d.freezes === "object" ? d.freezes : {}));
+        if (d.theme) localStorage.setItem(THEME_KEY, JSON.stringify(d.theme));
+        location.reload();
+      };
+      reader.readAsText(file);
     });
 
     document.getElementById("date").textContent = new Date().toLocaleDateString("uk-UA", {
