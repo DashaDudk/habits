@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Мої звички</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #eef7ea;
+      --card: #ffffff;
+      --sage: #d4ebcf;
+      --leaf: #5aab68;
+      --leaf-dark: #2f7a43;
+      --ink: #1f3d2b;
+      --muted: #6d8a76;
+      --lime: #bfe48f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Nunito", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app { width: 100%; max-width: 480px; padding: 24px 18px 110px; }
+
+    header h1 { font-size: 26px; font-weight: 800; }
+    header p { color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+    /* Вкладки */
+    .tabs {
+      margin: 18px 0 4px;
+      background: var(--sage);
+      border-radius: 18px;
+      padding: 5px;
+      display: flex;
+      gap: 4px;
+    }
+    .tab {
+      flex: 1; border: none; background: none; cursor: pointer;
+      font: inherit; font-weight: 800; color: var(--leaf-dark);
+      padding: 10px; border-radius: 14px;
+    }
+    .tab.active { background: #fff; box-shadow: 0 2px 6px rgba(47, 122, 67, 0.15); }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Кільце прогресу */
+    .summary {
+      margin: 18px 0;
+      background: linear-gradient(160deg, var(--sage), var(--lime));
+      border-radius: 28px;
+      padding: 22px;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .ring { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
+    .ring svg { transform: rotate(-90deg); }
+    .ring circle { fill: none; stroke-width: 12; stroke-linecap: round; }
+    .ring .track { stroke: rgba(255, 255, 255, 0.6); }
+    .ring .bar {
+      stroke: var(--leaf-dark);
+      stroke-dasharray: 289; stroke-dashoffset: 289;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .ring .percent {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      font-size: 24px; font-weight: 800;
+    }
+    .summary h2 { font-size: 18px; font-weight: 800; }
+    .summary p { margin-top: 4px; font-weight: 600; color: var(--leaf-dark); }
+
+    /* Список звичок */
+    .list { display: flex; flex-direction: column; gap: 12px; }
+    .habit {
+      background: var(--card); border-radius: 20px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+    }
+    .check {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 3px solid var(--sage); background: #fff; cursor: pointer;
+      flex-shrink: 0; display: grid; place-items: center;
+      font-size: 18px; color: #fff;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .habit.done .check { background: var(--leaf); border-color: var(--leaf); }
+    .info { flex: 1; min-width: 0; }
+    .name { font-weight: 800; font-size: 16px; }
+    .habit.done .name { color: var(--muted); text-decoration: line-through; }
+    .meta { margin-top: 6px; display: flex; align-items: center; gap: 10px; }
+    .dots { display: flex; gap: 4px; }
+    .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--sage); }
+    .dots span.on { background: var(--leaf); }
+    .streak { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .del { border: none; background: none; cursor: pointer; color: var(--muted); font-size: 20px; padding: 6px; }
+    .empty { text-align: center; color: var(--muted); font-weight: 600; padding: 30px 10px; }
+
+    /* Календар */
+    .cal-card { margin-top: 18px; background: var(--card); border-radius: 24px; padding: 16px; }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cal-head h2 { font-size: 18px; font-weight: 800; text-transform: capitalize; }
+    .nav-btn {
+      width: 38px; height: 38px; border: none; border-radius: 12px;
+      background: var(--sage); color: var(--leaf-dark);
+      font-size: 20px; font-weight: 800; cursor: pointer;
+    }
+    .filter {
+      width: 100%; margin-bottom: 14px;
+      border: 2px solid var(--sage); background: #fff; color: var(--ink);
+      border-radius: 14px; padding: 10px 12px; font: inherit; font-weight: 600;
+    }
+    .weekdays, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .weekdays span { text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); padding-bottom: 4px; }
+    .day {
+      aspect-ratio: 1; border: 2px solid transparent; border-radius: 12px;
+      background: var(--bg); color: var(--ink);
+      font: inherit; font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    .day.blank { background: none; cursor: default; }
+    .day.l1 { background: var(--sage); }
+    .day.l2 { background: var(--lime); }
+    .day.l3 { background: var(--leaf); color: #fff; }
+    .day.future { opacity: 0.45; }
+    .day.today { border-color: var(--leaf-dark); }
+    .day.selected { box-shadow: 0 0 0 3px var(--leaf-dark); }
+
+    .legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--muted); }
+    .legend i { width: 14px; height: 14px; border-radius: 5px; display: inline-block; }
+
+    .month-stat { margin-top: 14px; font-weight: 600; color: var(--leaf-dark); }
+
+    .detail { margin-top: 16px; background: var(--card); border-radius: 24px; padding: 16px; }
+    .detail h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+    .detail-row {
+      width: 100%; display: flex; align-items: center; gap: 12px;
+      border: none; background: none; font: inherit; text-align: left;
+      padding: 8px 0; cursor: pointer; color: var(--ink);
+    }
+    .detail-row .mark {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 3px solid var(--sage); display: grid; place-items: center;
+      color: #fff; font-size: 14px; flex-shrink: 0;
+    }
+    .detail-row.on .mark { background: var(--leaf); border-color: var(--leaf); }
+    .detail-row span.t { font-weight: 700; }
+    .detail-row.off span.t { color: var(--muted); }
+    .hint { margin-top: 8px; font-size: 13px; color: var(--muted); font-weight: 600; }
+
+    /* Додавання нової звички */
+    .add-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; justify-content: center;
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      padding: 16px 18px 20px;
+    }
+    .add-bar.hidden { display: none; }
+    .add-bar form { width: 100%; max-width: 480px; display: flex; gap: 10px; }
+    .add-bar input {
+      flex: 1; min-width: 0; border: 2px solid var(--sage); background: #fff;
+      border-radius: 16px; padding: 14px 16px; font: inherit; font-weight: 600; color: var(--ink);
+    }
+    .add-bar input:focus { outline: none; border-color: var(--leaf); }
+    .add-bar button {
+      border: none; background: var(--leaf-dark); color: #fff;
+      font: inherit; font-weight: 800; border-radius: 16px; padding: 0 20px; cursor: pointer;
+    }
+    button:focus-visible, .check:focus-visible, .day:focus-visible, .filter:focus-visible {
+      outline: 3px solid var(--leaf-dark); outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Мої звички</h1>
+      <p id="date"></p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="today">Сьогодні</button>
+      <button class="tab" data-tab="calendar">Календар</button>
+    </nav>
+
+    <!-- Вкладка "Сьогодні" -->
+    <section class="view active" id="view-today">
+      <div class="summary">
+        <div class="ring">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle class="track" cx="55" cy="55" r="46"></circle>
+            <circle class="bar" id="bar" cx="55" cy="55" r="46"></circle>
+          </svg>
+          <div class="percent" id="percent">0%</div>
+        </div>
+        <div>
+          <h2>Сьогодні</h2>
+          <p id="summary-text"></p>
+        </div>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- Вкладка "Календар" -->
+    <section class="view" id="view-calendar">
+      <div class="cal-card">
+        <div class="cal-head">
+          <button class="nav-btn" id="prev" aria-label="Попередній місяць">‹</button>
+          <h2 id="month-title"></h2>
+          <button class="nav-btn" id="next" aria-label="Наступний місяць">›</button>
+        </div>
+        <select class="filter" id="filter" aria-label="Яку звичку показати"></select>
+        <div class="weekdays">
+          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="legend">
+          <span>Менше</span>
+          <i style="background: var(--bg)"></i>
+          <i style="background: var(--sage)"></i>
+          <i style="background: var(--lime)"></i>
+          <i style="background: var(--leaf)"></i>
+          <span>Більше</span>
+        </div>
+        <p class="month-stat" id="month-stat"></p>
+      </div>
+
+      <div class="detail" id="detail"></div>
+    </section>
+  </main>
+
+  <div class="add-bar" id="add-bar">
+    <form id="form">
+      <input id="input" type="text" placeholder="Нова звичка" maxlength="40" autocomplete="off">
+      <button type="submit">Додати</button>
+    </form>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "habits-v1";
+
+    // Дата у форматі РРРР-ММ-ДД (за місцевим часом)
+    const toKey = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
+    const daysAgo = (n) => {
+      const d = new Date();
+      d.setDate(d.getDate() - n);
+      return toKey(d);
+    };
+    const todayKey = () => toKey(new Date());
+
+    let habits = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
+
+    // Стан календаря
+    const now = new Date();
+    let viewYear = now.getFullYear();
+    let viewMonth = now.getMonth();
+    let selectedDate = todayKey();
+    let filter = "all";
+
+    // ---------- Вкладка "Сьогодні" ----------
+    function getStreak(habit) {
+      let count = 0;
+      let i = habit.done[daysAgo(0)] ? 0 : 1;
+      while (habit.done[daysAgo(i)]) { count++; i++; }
+      return count;
+    }
+
+    function renderToday() {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+
+      if (habits.length === 0) {
+        list.innerHTML = '<p class="empty">Поки що порожньо. Додай першу звичку внизу.</p>';
+      }
+
+      habits.forEach((habit) => {
+        const doneToday = !!habit.done[daysAgo(0)];
+        const streak = getStreak(habit);
+
+        let dots = "";
+        for (let i = 6; i >= 0; i--) {
+          dots += `<span class="${habit.done[daysAgo(i)] ? "on" : ""}"></span>`;
+        }
+
+        const el = document.createElement("div");
+        el.className = "habit" + (doneToday ? " done" : "");
+        el.innerHTML = `
+          <button class="check" aria-label="Відмітити виконання" data-id="${habit.id}">${doneToday ? "✓" : ""}</button>
+          <div class="info">
+            <div class="name"></div>
+            <div class="meta">
+              <div class="dots" title="Останні 7 днів">${dots}</div>
+              <span class="streak">${streak > 0 ? "Серія: " + streak : "Без серії"}</span>
+            </div>
+          </div>
+          <button class="del" aria-label="Видалити звичку" data-del="${habit.id}">×</button>
+        `;
+        el.querySelector(".name").textContent = habit.name;
+        list.appendChild(el);
+      });
+
+      const total = habits.length;
+      const done = habits.filter((h) => h.done[daysAgo(0)]).length;
+      const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+      document.getElementById("percent").textContent = pct + "%";
+      document.getElementById("bar").style.strokeDashoffset = 289 - (289 * pct) / 100;
+      document.getElementById("summary-text").textContent =
+        total === 0 ? "Додай першу звичку" : `Виконано ${done} з ${total}`;
+    }
+
+    // ---------- Вкладка "Календар" ----------
+    function renderFilter() {
+      const select = document.getElementById("filter");
+      select.innerHTML = '<option value="all">Усі звички разом</option>';
+      habits.forEach((h) => {
+        const opt = document.createElement("option");
+        opt.value = h.id;
+        opt.textContent = h.name;
+        select.appendChild(opt);
+      });
+      // Якщо вибрану звичку видалили - повертаємось до "Усі"
+      if (filter !== "all" && !habits.some((h) => String(h.id) === String(filter))) filter = "all";
+      select.value = filter;
+    }
+
+    // Рівень заповненості дня: 0..3
+    function dayLevel(key) {
+      if (habits.length === 0) return 0;
+      if (filter === "all") {
+        const done = habits.filter((h) => h.done[key]).length;
+        if (done === 0) return 0;
+        if (done === habits.length) return 3;
+        return done / habits.length < 0.5 ? 1 : 2;
+      }
+      const habit = habits.find((h) => String(h.id) === String(filter));
+      return habit && habit.done[key] ? 3 : 0;
+    }
+
+    function renderCalendar() {
+      renderFilter();
+
+      const title = new Date(viewYear, viewMonth, 1).toLocaleDateString("uk-UA", {
+        month: "long", year: "numeric"
+      });
+      document.getElementById("month-title").textContent = title;
+
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      // Тиждень починається з понеділка
+      const firstWeekday = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+      for (let i = 0; i < firstWeekday; i++) {
+        const blank = document.createElement("div");
+        blank.className = "day blank";
+        grid.appendChild(blank);
+      }
+
+      const tKey = todayKey();
+      let monthMarks = 0;
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const key = toKey(new Date(viewYear, viewMonth, d));
+        const level = dayLevel(key);
+        if (level > 0) {
+          monthMarks += filter === "all" ? habits.filter((h) => h.done[key]).length : 1;
+        }
+
+        const btn = document.createElement("button");
+        btn.className = "day" + (level ? " l" + level : "");
+        if (key > tKey) btn.classList.add("future");
+        if (key === tKey) btn.classList.add("today");
+        if (key === selectedDate) btn.classList.add("selected");
+        btn.textContent = d;
+        btn.dataset.date = key;
+        grid.appendChild(btn);
+      }
+
+      document.getElementById("month-stat").textContent =
+        `Відміток за місяць: ${monthMarks}`;
+
+      renderDetail();
+    }
+
+    function renderDetail() {
+      const box = document.getElementById("detail");
+      const [y, m, d] = selectedDate.split("-").map(Number);
+      const label = new Date(y, m - 1, d).toLocaleDateString("uk-UA", {
+        weekday: "long", day: "numeric", month: "long"
+      });
+      const isFuture = selectedDate > todayKey();
+
+      box.innerHTML = "";
+      const h3 = document.createElement("h3");
+      h3.textContent = label;
+      box.appendChild(h3);
+
+      if (habits.length === 0) {
+        box.insertAdjacentHTML("beforeend", '<p class="hint">Ще немає звичок.</p>');
+        return;
+      }
+
+      habits.forEach((habit) => {
+        const on = !!habit.done[selectedDate];
+        const row = document.createElement("button");
+        row.className = "detail-row " + (on ? "on" : "off");
+        row.dataset.id = habit.id;
+        row.disabled = isFuture;
+        row.innerHTML = `<span class="mark">${on ? "✓" : ""}</span><span class="t"></span>`;
+        row.querySelector(".t").textContent = habit.name;
+        box.appendChild(row);
+      });
+
+      box.insertAdjacentHTML(
+        "beforeend",
+        `<p class="hint">${isFuture ? "Цей день ще не настав." : "Забула відмітити? Натисни на звичку, щоб змінити."}</p>`
+      );
+    }
+
+    // ---------- Події ----------
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t === tab));
+        const name = tab.dataset.tab;
+        document.getElementById("view-today").classList.toggle("active", name === "today");
+        document.getElementById("view-calendar").classList.toggle("active", name === "calendar");
+        document.getElementById("add-bar").classList.toggle("hidden", name !== "today");
+        if (name === "calendar") renderCalendar();
+      });
+    });
+
+    document.getElementById("prev").addEventListener("click", () => {
+      viewMonth--;
+      if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCalendar();
+    });
+    document.getElementById("next").addEventListener("click", () => {
+      viewMonth++;
+      if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    });
+    document.getElementById("filter").addEventListener("change", (e) => {
+      filter = e.target.value;
+      renderCalendar();
+    });
+    document.getElementById("grid").addEventListener("click", (e) => {
+      const day = e.target.closest("[data-date]");
+      if (!day) return;
+      selectedDate = day.dataset.date;
+      renderCalendar();
+    });
+    document.getElementById("detail").addEventListener("click", (e) => {
+      const row = e.target.closest("[data-id]");
+      if (!row || row.disabled) return;
+      const habit = habits.find((h) => h.id === Number(row.dataset.id));
+      habit.done[selectedDate] = !habit.done[selectedDate];
+      save(); renderCalendar(); renderToday();
+    });
+
+    document.getElementById("list").addEventListener("click", (e) => {
+      const checkBtn = e.target.closest("[data-id]");
+      const delBtn = e.target.closest("[data-del]");
+
+      if (checkBtn) {
+        const habit = habits.find((h) => h.id === Number(checkBtn.dataset.id));
+        const today = daysAgo(0);
+        habit.done[today] = !habit.done[today];
+        save(); renderToday();
+      }
+      if (delBtn) {
+        habits = habits.filter((h) => h.id !== Number(delBtn.dataset.del));
+        save(); renderToday();
+      }
+    });
+
+    document.getElementById("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = document.getElementById("input");
+      const name = input.value.trim();
+      if (!name) return;
+      habits.push({ id: Date.now(), name, done: {} });
+      input.value = "";
+      save(); renderToday();
+    });
+
+    document.getElementById("date").textContent = new Date().toLocaleDateString("uk-UA", {
+      weekday: "long", day: "numeric", month: "long"
+    });
+
+    renderToday();
+  </script>
+</body>
+</html>
